@@ -1,1 +1,1 @@
-alias ExNet.Boundary.Debug
+alias ExNet.Boundary.DebugManager

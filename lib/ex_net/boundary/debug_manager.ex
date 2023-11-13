@@ -1,4 +1,4 @@
-defmodule ExNet.Boundary.Debug do
+defmodule ExNet.Boundary.DebugManager do
   alias ExNet.Boundary.PcapServer
 
   def enable(:pcap) do
