@@ -31,9 +31,20 @@ defmodule ExNet.Boundary.PcapServer do
     {:noreply, state}
   end
 
+  def handle_cast({:debug, true}, state) do
+    {:noreply, %State{state | debug?: true}}
+  end
+
+  def handle_cast({:debug, false}, state) do
+    {:noreply, %State{state | debug?: false}}
+  end
+
   @impl GenServer
-  def handle_info({_port, {:data, data}}, state) do
-    IO.inspect(data, label: "Pcap server received data")
+  def handle_info({_port, {:data, data}}, %State{debug?: debug?} = state) do
+    if debug? do
+      IO.inspect(data, label: "Pcap data")
+    end
+
     {:noreply, state}
   end
 
