@@ -10,6 +10,8 @@ defmodule ExNet.MixProject do
       # 引导mix同时执行make clean
       make_clean: ["clean"],
       compilers: [:elixir_make] ++ Mix.compilers(),
+      # 不启动实际网卡内容单独测试
+      aliases: [test: "test --no-start"],
       deps: deps()
     ]
   end
