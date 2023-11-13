@@ -1,0 +1,13 @@
+* Debug
+DebugManager.enable(:pcap)
+DebugManager.disable(:pcap)
+DebugManager.enable(:eth)
+DebugManager.disable(:eth)
+DebugManager.enable(:arp)
+DebugManager.disable(:arp)
+
+* ARP
+DebugManager.enable(:arp)
+{:ok, mac_addr} = ExNet.Api.Inet.find_mac_address("192.168.1.253")
+ExNet.Core.Ethernet.mac_i2s(mac_addr)
+{:error, :not_found} = ExNet.Api.Inet.find_mac_address("192.168.1.222")
