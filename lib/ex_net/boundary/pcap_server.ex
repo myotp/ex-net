@@ -20,13 +20,9 @@ defmodule ExNet.Boundary.PcapServer do
   def init(_args) do
     exec = sniff_path()
     port = Port.open({:spawn, exec}, [{:packet, 2}, :nouse_stdio, :binary])
-    {:ok, pcap} = PcapDriver.open(port, "en0")
+    {:ok, pcap} = PcapDriver.open(port, device_name!())
     PcapDriver.loop(port, pcap)
     {:ok, %State{port: port, pcap: pcap, debug?: false}}
-  end
-
-  defp sniff_path() do
-    :code.priv_dir(:ex_net) ++ ~c"/sniff"
   end
 
   @impl GenServer
@@ -39,5 +35,13 @@ defmodule ExNet.Boundary.PcapServer do
   def handle_info({_port, {:data, data}}, state) do
     IO.inspect(data, label: "Pcap server received data")
     {:noreply, state}
+  end
+
+  defp sniff_path() do
+    :code.priv_dir(:ex_net) ++ ~c"/sniff"
+  end
+
+  defp device_name!() do
+    Application.fetch_env!(:ex_net, :device_name)
   end
 end
