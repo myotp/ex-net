@@ -4,6 +4,7 @@ defmodule ExNet.Boundary.EthServer do
   require Logger
 
   alias ExNet.Boundary.PcapServer
+  alias ExNet.Boundary.ArpServer
   alias ExNet.Boundary.Config
   alias ExNet.Core.Ethernet
 
@@ -20,7 +21,7 @@ defmodule ExNet.Boundary.EthServer do
   end
 
   def start_link(_args) do
-    mac_addr = fetch_local_mac_addr!()
+    mac_addr = Config.fetch_local_mac_addr!()
     Logger.info("本机MAC地址为: #{ExNet.Core.Ethernet.mac_i2s(mac_addr)}")
     GenServer.start_link(__MODULE__, %{local_mac_addr: mac_addr}, name: __MODULE__)
   end
@@ -61,19 +62,15 @@ defmodule ExNet.Boundary.EthServer do
     {:noreply, %State{state | debug?: false}}
   end
 
-  defp fetch_local_mac_addr!() do
-    {:ok, addrs} = :inet.getifaddrs()
-    {_, addrs} = List.keyfind(addrs, String.to_charlist(Config.device_name!()), 0)
-    hwaddr = Keyword.get(addrs, :hwaddr)
-    <<mac_addr::big-48>> = :binary.list_to_bin(hwaddr)
-    mac_addr
-  end
-
   defp handle_packet(local_mac_addr, eth) do
     if my_packet?(local_mac_addr, eth.dst) do
       case eth.type do
-        type ->
-          IO.inspect(type, label: "ETH类型")
+        :ARP ->
+          ArpServer.recv(eth.data)
+
+        _type ->
+          # IO.inspect(type, label: "ETH类型")
+          :ok
       end
     end
   end

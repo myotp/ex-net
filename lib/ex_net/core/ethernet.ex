@@ -23,6 +23,15 @@ defmodule ExNet.Core.Ethernet do
     <<dst::48-big, src::48-big, type::16-big, data::binary>>
   end
 
+  @doc """
+  将MAC地址48位数字转换为可读地址
+
+  ## Examples
+
+      iex> ExNet.Core.Ethernet.mac_i2s(18838586676582)
+      "11:22:33:44:55:66"
+
+  """
   def mac_i2s(mac_addr) do
     mac_addr
     |> Integer.to_string(16)
@@ -38,6 +47,15 @@ defmodule ExNet.Core.Ethernet do
     |> String.downcase()
   end
 
+  @doc """
+  将可读MAC地址转换为48位数字地址
+
+  ## Examples
+
+      iex> ExNet.Core.Ethernet.mac_s2i("11:22:33:44:55:66")
+      18838586676582
+
+  """
   def mac_s2i(s) do
     s
     |> String.replace(":", "")

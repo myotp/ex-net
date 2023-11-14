@@ -9,4 +9,5 @@ defmodule ExNet.Boundary.DebugManager do
 
   defp type_to_server(:pcap), do: ExNet.Boundary.PcapServer
   defp type_to_server(:eth), do: ExNet.Boundary.EthServer
+  defp type_to_server(:arp), do: ExNet.Boundary.ArpServer
 end
