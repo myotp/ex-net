@@ -1,11 +1,12 @@
 defmodule ExNet.Boundary.DebugManager do
-  alias ExNet.Boundary.PcapServer
-
-  def enable(:pcap) do
-    GenServer.cast(PcapServer, {:debug, true})
+  def enable(type) do
+    GenServer.cast(type_to_server(type), {:debug, true})
   end
 
-  def disable(:pcap) do
-    GenServer.cast(PcapServer, {:debug, false})
+  def disable(type) do
+    GenServer.cast(type_to_server(type), {:debug, false})
   end
+
+  defp type_to_server(:pcap), do: ExNet.Boundary.PcapServer
+  defp type_to_server(:eth), do: ExNet.Boundary.EthServer
 end

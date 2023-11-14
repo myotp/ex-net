@@ -2,14 +2,16 @@ defmodule ExNet.Boundary.PcapServer do
   use GenServer
 
   require Logger
+  alias ExNet.Boundary.EthServer
   alias ExNet.Boundary.PcapDriver
+  alias ExNet.Boundary.Config
 
   defmodule State do
     defstruct ~w[port pcap debug?]a
   end
 
   # API
-  def send!(packet), do: GenServer.cast(__MODULE__, {:send, packet})
+  def send(packet), do: GenServer.cast(__MODULE__, {:send, packet})
 
   def start_link(args \\ []) do
     Logger.debug("启动pcap...")
@@ -20,7 +22,7 @@ defmodule ExNet.Boundary.PcapServer do
   def init(_args) do
     exec = sniff_path()
     port = Port.open({:spawn, exec}, [{:packet, 2}, :nouse_stdio, :binary])
-    {:ok, pcap} = PcapDriver.open(port, device_name!())
+    {:ok, pcap} = PcapDriver.open(port, Config.device_name!())
     PcapDriver.loop(port, pcap)
     {:ok, %State{port: port, pcap: pcap, debug?: false}}
   end
@@ -45,14 +47,11 @@ defmodule ExNet.Boundary.PcapServer do
       IO.inspect(data, label: "Pcap data")
     end
 
+    EthServer.recv(data)
     {:noreply, state}
   end
 
   defp sniff_path() do
     :code.priv_dir(:ex_net) ++ ~c"/sniff"
-  end
-
-  defp device_name!() do
-    Application.fetch_env!(:ex_net, :device_name)
   end
 end
