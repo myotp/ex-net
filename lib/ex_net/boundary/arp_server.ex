@@ -18,6 +18,8 @@ defmodule ExNet.Boundary.ArpServer do
   # API
   def recv(data), do: GenServer.cast(__MODULE__, {:recv, data})
 
+  def find_mac_addr(ip_addr, timeout \\ 5000)
+
   def find_mac_addr(ip_addr, timeout) when is_binary(ip_addr) do
     find_mac_addr(IPv4.ip_addr_to_integer(ip_addr), timeout)
   end

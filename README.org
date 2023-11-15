@@ -5,6 +5,8 @@ DebugManager.enable(:eth)
 DebugManager.disable(:eth)
 DebugManager.enable(:arp)
 DebugManager.disable(:arp)
+DebugManager.enable(:ip)
+DebugManager.disable(:ip)
 
 * ARP
 DebugManager.enable(:arp)

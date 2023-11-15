@@ -3,6 +3,7 @@ defmodule ExNet.Boundary.EthServer do
   import Bitwise
   require Logger
 
+  alias ExNet.Boundary.IpServer
   alias ExNet.Boundary.PcapServer
   alias ExNet.Boundary.ArpServer
   alias ExNet.Boundary.Config
@@ -67,6 +68,9 @@ defmodule ExNet.Boundary.EthServer do
       case eth.type do
         :ARP ->
           ArpServer.recv(eth.data)
+
+        :IPv4 ->
+          IpServer.recv(eth.data)
 
         _type ->
           # IO.inspect(type, label: "ETH类型")

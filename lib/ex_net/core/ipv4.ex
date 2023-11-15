@@ -58,8 +58,10 @@ defmodule ExNet.Core.IPv4 do
   def protocol_a2i(:TCP), do: 0x06
   def protocol_a2i(:UDP), do: 0x11
 
+  # https://en.wikipedia.org/wiki/List_of_IP_protocol_numbers
   def protocol_i2a(0x06), do: :TCP
   def protocol_i2a(0x11), do: :UDP
+  def protocol_i2a(_), do: :___
 
   def ip_addr_to_tuple(i) when is_integer(i) do
     ip_addr_i2t(i, [])
