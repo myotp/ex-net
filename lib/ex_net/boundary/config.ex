@@ -7,6 +7,14 @@ defmodule ExNet.Boundary.Config do
     Application.fetch_env!(:ex_net, :virtual_ip_address)
   end
 
+  def gateway_ip_address!() do
+    Application.fetch_env!(:ex_net, :gateway_ip_address)
+  end
+
+  def dns_ip_address!() do
+    Application.fetch_env!(:ex_net, :dns_ip_address)
+  end
+
   def fetch_local_mac_addr!() do
     {:ok, addrs} = :inet.getifaddrs()
     {_, addrs} = List.keyfind(addrs, String.to_charlist(device_name!()), 0)

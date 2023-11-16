@@ -9,7 +9,7 @@ defmodule ExNet.Boundary.ArpServer do
   alias ExNet.Core.IPv4
   alias ExNet.Core.Ethernet
 
-  @arp_retry_interval 50
+  @arp_retry_interval 100
 
   defmodule State do
     defstruct ~w[ip mac arp_cache debug?]a
@@ -17,8 +17,6 @@ defmodule ExNet.Boundary.ArpServer do
 
   # API
   def recv(data), do: GenServer.cast(__MODULE__, {:recv, data})
-
-  def find_mac_addr(ip_addr, timeout \\ 5000)
 
   def find_mac_addr(ip_addr, timeout) when is_binary(ip_addr) do
     find_mac_addr(IPv4.ip_addr_to_integer(ip_addr), timeout)
@@ -84,7 +82,6 @@ defmodule ExNet.Boundary.ArpServer do
 
   defp handle_packet(state, arp) do
     if arp.type == :reply and arp.dst_mac == state.mac do
-      Logger.info("收到来自#{IPv4.ip_addr_to_string(arp.src_ip)}给我的ARP回复")
       :ets.insert(state.arp_cache, {arp.src_ip, arp.src_mac})
     end
   end

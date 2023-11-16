@@ -10,6 +10,9 @@ defmodule ExNet.MixProject do
       # 引导mix同时执行make clean
       make_clean: ["clean"],
       compilers: [:elixir_make] ++ Mix.compilers(),
+      preferred_cli_env: [
+        "test.watch": :test
+      ],
       # 不启动实际网卡内容单独测试
       aliases: [test: "test --no-start"],
       deps: deps()
@@ -27,7 +30,8 @@ defmodule ExNet.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:elixir_make, "~> 0.7.7", runtime: false}
+      {:elixir_make, "~> 0.7.7", runtime: false},
+      {:mix_test_watch, "~> 1.1", only: [:dev, :test], runtime: false}
     ]
   end
 end

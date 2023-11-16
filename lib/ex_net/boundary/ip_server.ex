@@ -87,10 +87,6 @@ defmodule ExNet.Boundary.IpServer do
     if state.ip == ip.dst_ip do
       case ip.protocol do
         :UDP ->
-          IO.inspect({IPv4.ip_addr_to_string(state.ip), ip.dst_ip |> IPv4.ip_addr_to_string()},
-            label: "相关UDP包?"
-          )
-
           UdpServer.recv({ip.src_ip, ip.data})
 
         _ ->
@@ -101,7 +97,14 @@ defmodule ExNet.Boundary.IpServer do
 
   defp send_single_packet(id, src_ip, dst_ip, protocol, data) do
     ip_packet = IPv4.make_ipv4_packet(id, src_ip, dst_ip, protocol, data)
-    {:ok, dst_mac} = ArpServer.find_mac_addr(dst_ip)
-    EthServer.send(dst_mac, :IPv4, ip_packet)
+
+    case ArpServer.find_mac_addr(dst_ip, 500) do
+      {:ok, dst_mac} ->
+        EthServer.send(dst_mac, :IPv4, ip_packet)
+
+      _ ->
+        {:ok, gateway_mac} = ArpServer.find_mac_addr(Config.gateway_ip_address!(), 500)
+        EthServer.send(gateway_mac, :IPv4, ip_packet)
+    end
   end
 end

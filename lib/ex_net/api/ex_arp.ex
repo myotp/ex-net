@@ -1,4 +1,4 @@
-defmodule ExNet.Api.Inet do
+defmodule ExNet.Api.ExARP do
   alias ExNet.Boundary.ArpServer
 
   def find_mac_address(ip_address, timeout \\ 5000) do
