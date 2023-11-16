@@ -5,6 +5,7 @@ defmodule ExNet.Boundary.IpServer do
   alias ExNet.Boundary.Config
   alias ExNet.Boundary.EthServer
   alias ExNet.Boundary.ArpServer
+  alias ExNet.Boundary.UdpServer
   alias ExNet.Core.Ethernet
   alias ExNet.Core.IPv4
 
@@ -85,6 +86,13 @@ defmodule ExNet.Boundary.IpServer do
   defp handle_packet(state, ip) do
     if state.ip == ip.dst_ip do
       case ip.protocol do
+        :UDP ->
+          IO.inspect({IPv4.ip_addr_to_string(state.ip), ip.dst_ip |> IPv4.ip_addr_to_string()},
+            label: "相关UDP包?"
+          )
+
+          UdpServer.recv({ip.src_ip, ip.data})
+
         _ ->
           :ok
       end

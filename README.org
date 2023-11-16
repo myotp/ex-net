@@ -7,9 +7,33 @@ DebugManager.enable(:arp)
 DebugManager.disable(:arp)
 DebugManager.enable(:ip)
 DebugManager.disable(:ip)
+DebugManager.enable(:udp)
+DebugManager.disable(:udp)
 
 * ARP
 DebugManager.enable(:arp)
 {:ok, mac_addr} = ExNet.Api.Inet.find_mac_address("192.168.1.253")
 ExNet.Core.Ethernet.mac_i2s(mac_addr)
 {:error, :not_found} = ExNet.Api.Inet.find_mac_address("192.168.1.222")
+
+{:ok, mac_addr} = ExNet.Api.Inet.find_mac_address("192.168.1.1")
+ExNet.Core.Ethernet.mac_i2s(mac_addr)
+
+* UDP
+
+# 192.168.1.90 <--> 192.168.1.155
+#   [remote]           [ex-net]
+
+# == receive packets ==
+# [ex-net]
+DebugManager.enable(:udp)
+{:ok, mac_addr} = ExNet.Api.Inet.find_mac_address("192.168.1.90")
+{:ok, socket} = ExUDP.open(8888)
+# [remote]
+iex
+{:ok, socket} = :gen_udp.open(9090, [:binary, active: true])
+:gen_udp.send(socket, {192,168,1,155}, 8888, "hello222")
+# [ex-net]
+flush()
+# == send packets ==
+ExUDP.send(socket, "192.168.1.90", 9090, "Hello, from ex-net")

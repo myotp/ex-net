@@ -6,6 +6,7 @@ defmodule ExNet.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      {ExNet.Boundary.UdpServer, []},
       {ExNet.Boundary.IpServer, []},
       {ExNet.Boundary.ArpServer, []},
       {ExNet.Boundary.EthServer, []},
