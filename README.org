@@ -59,3 +59,11 @@ ExTCP.send(socket, "Hello TCP")
 # [remote]
 :gen_tcp.send(socket, "hello")
 :gen_tcp.send(socket, "123")
+
+* HTTP
+ExHTTP.get("ifconfig.me")
+
+telnet 34.160.111.145 80
+GET / HTTP/1.1
+Host: ifconfig.me
+Accept: */*

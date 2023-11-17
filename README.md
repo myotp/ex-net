@@ -32,15 +32,6 @@ iex(3)> ExTCP.send(socket, "Hello TCP")
 :ok
 ```
 
-## DNS
-
-```elixir
-iex(2)> {:ok, ip_addr} = ExDNS.find_ip_address("ifconfig.me")
-{:ok, 580939665}
-iex(3)> IPv4.ip_addr_to_string(ip_addr)
-"34.160.111.145"
-```
-
 ## UDP
 
 ```elixir
@@ -48,6 +39,25 @@ iex(1)> {:ok, socket} = ExUDP.open(8888)
 {:ok, #Reference<0.3071399119.740818950.172299>}
 iex(2)> ExUDP.send(socket, "192.168.1.90", 9090, "Hello, from ex-net")
 :ok
+```
+
+## HTTP
+```elixir
+iex(1)> ExHTTP.get("ifconfig.me")
+Remote IP address: 34.160.111.145
+{:ok,
+ "HTTP/1.1 200 OK\r\nserver: istio-envoy\r\ndate: Fri, 17 Nov 2023 16:13:49 GMT\r\ncontent-type: text/plain\r\nContent-Length:
+ 13\r\naccess-control-allow-origin: *\r\nx-envoy-upstream-service-time: 0\r\nstrict-transport-security: max-age=2592000; inc
+ludeSubDomains\r\nVia: 1.1 google\r\n\r\n123.123.22.33"}
+```
+
+## DNS
+
+```elixir
+iex(2)> {:ok, ip_addr} = ExDNS.find_ip_address("ifconfig.me")
+{:ok, 580939665}
+iex(3)> IPv4.ip_addr_to_string(ip_addr)
+"34.160.111.145"
 ```
 
 ## ARP
