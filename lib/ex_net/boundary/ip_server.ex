@@ -6,6 +6,7 @@ defmodule ExNet.Boundary.IpServer do
   alias ExNet.Boundary.EthServer
   alias ExNet.Boundary.ArpServer
   alias ExNet.Boundary.UdpServer
+  alias ExNet.Boundary.TcpServer
   alias ExNet.Core.Ethernet
   alias ExNet.Core.IPv4
 
@@ -88,6 +89,9 @@ defmodule ExNet.Boundary.IpServer do
       case ip.protocol do
         :UDP ->
           UdpServer.recv({ip.src_ip, ip.data})
+
+        :TCP ->
+          TcpServer.recv(ip.data)
 
         _ ->
           :ok

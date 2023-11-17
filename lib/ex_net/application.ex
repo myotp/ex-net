@@ -6,6 +6,9 @@ defmodule ExNet.Application do
   @impl true
   def start(_type, _args) do
     children = [
+      # TCP
+      {DynamicSupervisor, [strategy: :one_for_one, name: ExNet.Supervisor.TcpConnSup]},
+      {ExNet.Boundary.TcpServer, []},
       {ExNet.Boundary.DnsServer, []},
       {ExNet.Boundary.UdpServer, []},
       {ExNet.Boundary.IpServer, []},

@@ -13,4 +13,5 @@ defmodule ExNet.Boundary.DebugManager do
   defp type_to_server(:ip), do: ExNet.Boundary.IpServer
   defp type_to_server(:udp), do: ExNet.Boundary.UdpServer
   defp type_to_server(:dns), do: ExNet.Boundary.DnsServer
+  defp type_to_server(:tcp), do: ExNet.Boundary.TcpServer
 end

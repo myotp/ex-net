@@ -11,6 +11,8 @@ DebugManager.enable(:udp)
 DebugManager.disable(:udp)
 DebugManager.enable(:dns)
 DebugManager.disable(:dns)
+DebugManager.enable(:tcp)
+DebugManager.disable(:tcp)
 
 * ARP
 DebugManager.enable(:arp)
@@ -43,3 +45,17 @@ ExUDP.send(socket, "192.168.1.90", 9090, "Hello, from ex-net")
 DebugManager.enable(:dns)
 {:ok, ip_addr} = ExDNS.find_ip_address("ifconfig.me")
 IPv4.ip_addr_to_string(ip_addr)
+
+* TCP
+# [remote]
+{:ok, listen_socket} = :gen_tcp.listen(6789, [:binary, packet: 0, active: false, reuseadd: true])
+{:ok, socket} = :gen_tcp.accept(listen_socket)
+
+# [ex-net]
+DebugManager.enable(:tcp)
+{:ok, socket} = ExTCP.connect("192.168.1.90", 6789)
+ExTCP.send(socket, "Hello TCP")
+
+# [remote]
+:gen_tcp.send(socket, "hello")
+:gen_tcp.send(socket, "123")

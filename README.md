@@ -4,6 +4,34 @@
 
 ExNet - a custom TCP/IP protocol stack from scratch using Elixir, enabling fundamental functionalities of the TCP/IP. It also contains a simplified DNS and HTTP client implementation as a demonstration of the entire stack.
 
+## TCP
+
+Remote machine
+```elixir
+iex(1)> {:ok, socket} = :gen_tcp.listen(6789, [:binary, packet: 0, reuseaddr: true, active: false])
+{:ok, #Port<0.3>}
+iex(2)> {:ok, socket} = :gen_tcp.accept(socket)
+{:ok, #Port<0.4>}
+iex(3)> :gen_tcp.send(socket, "hello")
+:ok
+iex(4)> :gen_tcp.send(socket, "123")
+:ok
+iex(5)> :gen_tcp.recv(socket, 0)
+{:ok, "Hello TCP"}
+```
+
+ex-net
+```elixir
+iex(1)> {:ok, socket} = ExTCP.connect("192.168.1.90", 6789)
+{:ok, #Reference<0.3893668254.4126146566.224887>}
+iex(2)> flush()
+{:tcp, #Reference<0.3893668254.4126146566.224887>, "hello"}
+{:tcp, #Reference<0.3893668254.4126146566.224887>, "123"}
+:ok
+iex(3)> ExTCP.send(socket, "Hello TCP")
+:ok
+```
+
 ## DNS
 
 ```elixir
